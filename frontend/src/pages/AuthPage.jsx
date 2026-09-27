@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase";
+import { getAuthErrorMessage } from "../authErrors";
 import { useAuth } from "../context/AuthContext";
 import Navbar from "../components/Navbar";
 
@@ -33,7 +34,7 @@ export default function AuthPage({ mode }) {
         navigate("/dashboard");
       }
     } catch (err) {
-      setError(err.message.replace("Firebase: ", ""));
+      setError(getAuthErrorMessage(err));
     } finally {
       setSubmitting(false);
     }
@@ -51,7 +52,7 @@ export default function AuthPage({ mode }) {
       await signInWithEmailAndPassword(auth, "demo@studentlaunch.app", demoPassword);
       navigate("/dashboard");
     } catch (err) {
-      setError(err.message.replace("Firebase: ", ""));
+      setError(getAuthErrorMessage(err));
     } finally {
       setSubmitting(false);
     }
@@ -92,7 +93,22 @@ export default function AuthPage({ mode }) {
                 className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-100"
               />
             </label>
-            {error && <p className="text-sm text-red-600">{error}</p>}
+            {error && (
+              <p
+                role="alert"
+                className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700"
+              >
+                {error}
+                {error.includes("already exists") && (
+                  <>
+                    {" "}
+                    <Link to="/login" className="font-semibold underline">
+                      Go to login
+                    </Link>
+                  </>
+                )}
+              </p>
+            )}
             <button
               type="submit"
               disabled={submitting}
