@@ -88,7 +88,8 @@ const opportunities = [
     type: "hackathon",
     category: "hackathon",
     skills: ["Python", "React", "Hardware", "Machine Learning"],
-    deadline: "2026-09-15",
+    // Projected annual application deadline; 2027 dates are not published yet.
+    deadline: "2027-07-04",
     link: "https://hackmit.org/",
     description:
       "MIT's flagship student hackathon. Hardware lab, design mentors, and a mix of beginner and advanced tracks.",
@@ -215,11 +216,41 @@ const opportunities = [
   },
 ];
 
+async function seedDemoProfile() {
+  const demoUid = process.env.DEMO_USER_UID;
+  if (!demoUid) {
+    throw new Error("DEMO_USER_UID is required to seed the demo profile.");
+  }
+
+  await db.collection("profiles").doc(demoUid).set(
+    {
+      education: "B.S. Computer Science, 2027",
+      skills: ["JavaScript", "React", "Python", "SQL", "Machine Learning"],
+      interests: ["Frontend development", "AI and data science", "Hackathons"],
+      preferredCategories: ["internship", "hackathon", "course", "competition"],
+      updatedAt: new Date().toISOString(),
+    },
+    { merge: true }
+  );
+  console.log(`Seeded demo profile for UID ${demoUid}.`);
+}
+
 async function seed() {
+  if (process.argv.includes("--profile-only")) {
+    await seedDemoProfile();
+    return;
+  }
+
   const col = db.collection("opportunities");
-  const existing = await col.limit(1).get();
-  if (!existing.empty) {
-    console.log("Opportunities already exist; adding sample docs with generated IDs.");
+  const existingSnapshot = await col.count().get();
+  const existingCount = existingSnapshot.data().count;
+  const force = process.argv.includes("--force");
+
+  if (existingCount > 0 && !force) {
+    console.warn(
+      `Found ${existingCount} existing opportunities. Aborting seed; pass --force to add sample documents anyway.`
+    );
+    return;
   }
 
   const batch = db.batch();
@@ -229,6 +260,12 @@ async function seed() {
   }
   await batch.commit();
   console.log(`Seeded ${opportunities.length} opportunities.`);
+
+  if (process.env.DEMO_USER_UID) {
+    await seedDemoProfile();
+  } else {
+    console.warn("DEMO_USER_UID is not set; skipped the demo profile.");
+  }
 }
 
 seed()

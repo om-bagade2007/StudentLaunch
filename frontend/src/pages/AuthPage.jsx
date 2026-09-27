@@ -14,6 +14,7 @@ export default function AuthPage({ mode }) {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const demoPassword = import.meta.env.VITE_DEMO_PASSWORD;
 
   if (!loading && user) {
     return <Navigate to={location.state?.from || "/dashboard"} replace />;
@@ -31,6 +32,24 @@ export default function AuthPage({ mode }) {
         await signInWithEmailAndPassword(auth, email, password);
         navigate("/dashboard");
       }
+    } catch (err) {
+      setError(err.message.replace("Firebase: ", ""));
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  async function onDemoLogin() {
+    setError("");
+    if (!demoPassword) {
+      setError("Demo login is not configured. Set VITE_DEMO_PASSWORD and rebuild the frontend.");
+      return;
+    }
+
+    setSubmitting(true);
+    try {
+      await signInWithEmailAndPassword(auth, "demo@studentlaunch.app", demoPassword);
+      navigate("/dashboard");
     } catch (err) {
       setError(err.message.replace("Firebase: ", ""));
     } finally {
@@ -82,6 +101,18 @@ export default function AuthPage({ mode }) {
               {submitting ? "Please wait..." : isSignup ? "Sign up" : "Log in"}
             </button>
           </form>
+          {!isSignup && (
+            <div className="mt-5 border-t border-slate-200 pt-5">
+              <button
+                type="button"
+                onClick={onDemoLogin}
+                disabled={submitting}
+                className="w-full rounded-lg border border-teal-600 bg-white px-4 py-2.5 text-sm font-semibold text-teal-700 hover:bg-teal-50 disabled:opacity-60"
+              >
+                {submitting ? "Please wait..." : "Try Demo Account — No Signup Needed"}
+              </button>
+            </div>
+          )}
           <p className="mt-4 text-center text-sm text-slate-500">
             {isSignup ? (
               <>
