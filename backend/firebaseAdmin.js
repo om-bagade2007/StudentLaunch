@@ -8,13 +8,16 @@ const admin = {
   get apps() {
     return getApps();
   },
-  initializeApp,
-  credential: { cert },
-  auth: () => getAuth(),
-  firestore: () => getFirestore(),
+  auth: () => getAuth(getAdminApp()),
+  firestore: () => getFirestore(getAdminApp()),
 };
 
-if (!admin.apps.length) {
+function getAdminApp() {
+  const existingApps = admin.apps;
+  if (existingApps.length) {
+    return existingApps[0];
+  }
+
   const raw = process.env.FIREBASE_SERVICE_ACCOUNT;
   if (!raw) {
     throw new Error(
@@ -29,11 +32,20 @@ if (!admin.apps.length) {
     throw new Error("FIREBASE_SERVICE_ACCOUNT must be valid JSON");
   }
 
-  admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
+  return initializeApp({
+    credential: cert(serviceAccount),
   });
 }
 
-const db = admin.firestore();
+const db = new Proxy(
+  {},
+  {
+    get(_target, property) {
+      const firestore = admin.firestore();
+      const value = Reflect.get(firestore, property, firestore);
+      return typeof value === "function" ? value.bind(firestore) : value;
+    },
+  }
+);
 
 module.exports = { admin, db };
