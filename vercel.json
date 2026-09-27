@@ -10,6 +10,9 @@
   ],
   "routes": [
     { "src": "/api/(.*)", "dest": "backend/api/index.js" },
-    { "src": "/(.*)", "dest": "backend/public/$1" }
+    { "src": "/assets/(.*)", "dest": "/assets/$1" },
+    { "src": "/favicon.svg", "dest": "/favicon.svg" },
+    { "src": "/icons.svg", "dest": "/icons.svg" },
+    { "src": "/(.*)", "dest": "/index.html" }
   ]
 }
