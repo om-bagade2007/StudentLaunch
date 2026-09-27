@@ -13,9 +13,12 @@ export default function Navbar() {
     <header className="border-b border-slate-200 bg-white">
       <div className="mx-auto flex max-w-6xl flex-col gap-3 px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
         <NavLink to={user ? "/dashboard" : "/"} className="flex items-center gap-2">
-          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-blue-600 to-teal-500 text-sm font-bold text-white">
-            SL
-          </span>
+          <img
+            src="/studentlaunch-mark.png"
+            alt=""
+            aria-hidden="true"
+            className="h-10 w-10 rounded-lg object-cover ring-1 ring-slate-200"
+          />
           <span className="text-lg font-semibold text-slate-800">StudentLaunch</span>
         </NavLink>
         <nav aria-label="Main navigation" className="flex flex-wrap items-center gap-1">

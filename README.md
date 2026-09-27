@@ -1,5 +1,9 @@
 # StudentLaunch
 
+<p align="center">
+  <img src="assets/studentlaunch-logo.png" alt="StudentLaunch logo" width="640" />
+</p>
+
 **Find your next opportunity.** StudentLaunch helps students discover internships, hackathons, scholarships, competitions, and learning resources matched to their interests and skills.
 
 ## What you can do
@@ -87,6 +91,9 @@ backend/
 frontend/
   src/pages/             Home, auth, dashboard, profile, courses, tutorials, guidance
   src/components/        Navigation, opportunity cards, resource library, form controls
+  public/                App logo mark
+assets/
+  studentlaunch-logo.png Full StudentLaunch logo artwork
 api/index.js             Vercel Express function entry point
 vercel.json              Vercel build and route configuration
 Dockerfile               Multi-stage frontend/backend container build
