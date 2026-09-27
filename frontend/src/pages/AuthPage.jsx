@@ -1,9 +1,14 @@
 import { useState } from "react";
 import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  updateProfile,
+} from "firebase/auth";
 import { auth } from "../firebase";
 import { getAuthErrorMessage } from "../authErrors";
 import { useAuth } from "../context/AuthContext";
+import { api } from "../api";
 import Navbar from "../components/Navbar";
 
 export default function AuthPage({ mode }) {
@@ -13,11 +18,15 @@ export default function AuthPage({ mode }) {
   const location = useLocation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [mobile, setMobile] = useState("");
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [finishingSignup, setFinishingSignup] = useState(false);
   const demoPassword = import.meta.env.VITE_DEMO_PASSWORD;
 
-  if (!loading && user) {
+  if (!loading && user && !finishingSignup) {
     return <Navigate to={location.state?.from || "/dashboard"} replace />;
   }
 
@@ -27,8 +36,30 @@ export default function AuthPage({ mode }) {
     setSubmitting(true);
     try {
       if (isSignup) {
-        await createUserWithEmailAndPassword(auth, email, password);
-        navigate("/profile");
+        setFinishingSignup(true);
+        const credential = await createUserWithEmailAndPassword(auth, email, password);
+        const fullName = `${firstName.trim()} ${lastName.trim()}`;
+        try {
+          await updateProfile(credential.user, { displayName: fullName });
+        } catch {
+          // The Firestore profile remains the source of truth for these details.
+        }
+        try {
+          await api.saveProfile({
+            firstName: firstName.trim(),
+            lastName: lastName.trim(),
+            mobile: mobile.trim(),
+            education: "",
+            skills: [],
+            interests: [],
+            preferredCategories: [],
+            profileComplete: false,
+          });
+        } catch {
+          // Continue into setup with the entered details if the profile draft
+          // cannot be saved yet; the profile form will retry on submission.
+        }
+        navigate("/profile", { state: { firstName, lastName, mobile } });
       } else {
         await signInWithEmailAndPassword(auth, email, password);
         navigate("/dashboard");
@@ -72,6 +103,43 @@ export default function AuthPage({ mode }) {
               : "Log in to see opportunities matched to you."}
           </p>
           <form onSubmit={onSubmit} className="mt-6 space-y-4">
+            {isSignup && (
+              <>
+                <label className="block text-sm font-medium text-slate-700">
+                  First name
+                  <input
+                    type="text"
+                    autoComplete="given-name"
+                    required
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                    className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-100"
+                  />
+                </label>
+                <label className="block text-sm font-medium text-slate-700">
+                  Surname
+                  <input
+                    type="text"
+                    autoComplete="family-name"
+                    required
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                    className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-100"
+                  />
+                </label>
+                <label className="block text-sm font-medium text-slate-700">
+                  Mobile number
+                  <input
+                    type="tel"
+                    autoComplete="tel"
+                    required
+                    value={mobile}
+                    onChange={(e) => setMobile(e.target.value)}
+                    className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-100"
+                  />
+                </label>
+              </>
+            )}
             <label className="block text-sm font-medium text-slate-700">
               Email
               <input

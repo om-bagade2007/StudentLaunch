@@ -12,11 +12,30 @@ function normalizeList(value) {
 router.post("/", requireAuth, async (req, res) => {
   try {
     const uid = req.user.uid;
+    const firstName = req.body.firstName ? String(req.body.firstName).trim() : "";
+    const lastName = req.body.lastName ? String(req.body.lastName).trim() : "";
+    const mobile = req.body.mobile ? String(req.body.mobile).trim() : "";
+    const education = req.body.education ? String(req.body.education).trim() : "";
+    const skills = normalizeList(req.body.skills);
+    const interests = normalizeList(req.body.interests);
+    const preferredCategories = normalizeList(req.body.preferredCategories);
     const payload = {
-      education: req.body.education ? String(req.body.education).trim() : "",
-      skills: normalizeList(req.body.skills),
-      interests: normalizeList(req.body.interests),
-      preferredCategories: normalizeList(req.body.preferredCategories),
+      firstName,
+      lastName,
+      mobile,
+      education,
+      skills,
+      interests,
+      preferredCategories,
+      profileComplete: Boolean(
+        firstName &&
+          lastName &&
+          mobile &&
+          education &&
+          skills.length &&
+          interests.length &&
+          preferredCategories.length
+      ),
       updatedAt: new Date().toISOString(),
     };
 

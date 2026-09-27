@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import OpportunityCard from "../components/OpportunityCard";
 import OpportunityModal from "../components/OpportunityModal";
@@ -18,6 +19,7 @@ const withoutCourses = (list) =>
   );
 
 export default function DashboardPage() {
+  const navigate = useNavigate();
   const [tab, setTab] = useState("recommended");
   const [items, setItems] = useState([]);
   const [bookmarks, setBookmarks] = useState([]);
@@ -43,20 +45,33 @@ export default function DashboardPage() {
       setLoading(true);
       setError("");
       try {
+        let profile;
+        try {
+          profile = await api.getProfile();
+        } catch (err) {
+          if (err.status === 404) {
+            navigate("/profile", { replace: true });
+            return;
+          }
+          throw err;
+        }
+        const profileComplete =
+          profile.profileComplete ?? Boolean(
+            profile.education &&
+              profile.skills?.length &&
+              profile.interests?.length &&
+              profile.preferredCategories?.length
+          );
+        if (!profileComplete) {
+          navigate("/profile", { replace: true });
+          return;
+        }
+
         const saved = await loadBookmarks();
         if (cancelled) return;
         if (tab === "recommended") {
-          try {
-            const recs = await api.getRecommendations();
-            if (!cancelled) setItems(withoutCourses(recs));
-          } catch (err) {
-            if (err.status === 404) {
-              if (!cancelled) setItems([]);
-              setError("Add a profile to see recommendations.");
-            } else {
-              throw err;
-            }
-          }
+          const recs = await api.getRecommendations();
+          if (!cancelled) setItems(withoutCourses(recs));
         } else if (tab === "all") {
           const opps = await api.getOpportunities({
             category: category || undefined,
@@ -78,7 +93,7 @@ export default function DashboardPage() {
     return () => {
       cancelled = true;
     };
-  }, [tab, category, skill, loadBookmarks]);
+  }, [tab, category, skill, loadBookmarks, navigate]);
 
   async function toggleBookmark(opportunity) {
     setBookmarkingId(opportunity.id);
