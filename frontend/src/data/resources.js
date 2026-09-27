@@ -1,0 +1,153 @@
+export const TUTORIAL_TOPICS = ["All", "Web Development", "Programming", "Data & AI", "Tools"];
+
+export const TUTORIALS = [
+  {
+    title: "Learn Web Development",
+    provider: "MDN Web Docs",
+    topic: "Web Development",
+    level: "Beginner",
+    description: "A structured path through HTML, CSS, and JavaScript fundamentals from the people who document the web.",
+    link: "https://developer.mozilla.org/en-US/docs/Learn_web_development",
+  },
+  {
+    title: "Learn React",
+    provider: "react.dev",
+    topic: "Web Development",
+    level: "Intermediate",
+    description: "The official React tutorial covering components, state, effects, and thinking in React.",
+    link: "https://react.dev/learn",
+  },
+  {
+    title: "The Odin Project — Full Stack JavaScript",
+    provider: "The Odin Project",
+    topic: "Web Development",
+    level: "Beginner",
+    description: "Project-based curriculum that takes you from zero to building and deploying full stack apps.",
+    link: "https://www.theodinproject.com/paths/full-stack-javascript",
+  },
+  {
+    title: "The Python Tutorial",
+    provider: "python.org",
+    topic: "Programming",
+    level: "Beginner",
+    description: "The official introduction to Python syntax, data structures, modules, and error handling.",
+    link: "https://docs.python.org/3/tutorial/",
+  },
+  {
+    title: "CS50: Introduction to Computer Science",
+    provider: "Harvard",
+    topic: "Programming",
+    level: "Beginner",
+    description: "Harvard's legendary intro course covering C, Python, SQL, algorithms, and web basics.",
+    link: "https://cs50.harvard.edu/x/",
+  },
+  {
+    title: "JavaScript Algorithms and Data Structures",
+    provider: "freeCodeCamp",
+    topic: "Programming",
+    level: "Beginner",
+    description: "Interactive lessons and certification projects that build solid JavaScript problem-solving skills.",
+    link: "https://www.freecodecamp.org/learn/javascript-algorithms-and-data-structures-v8/",
+  },
+  {
+    title: "Interactive SQL Lessons",
+    provider: "SQLBolt",
+    topic: "Data & AI",
+    level: "Beginner",
+    description: "Short, hands-on exercises that teach querying, joins, aggregates, and schema design.",
+    link: "https://sqlbolt.com/",
+  },
+  {
+    title: "Practical Deep Learning for Coders",
+    provider: "fast.ai",
+    topic: "Data & AI",
+    level: "Intermediate",
+    description: "A top-down, code-first course for training and deploying modern deep learning models.",
+    link: "https://course.fast.ai/",
+  },
+  {
+    title: "Pro Git Book",
+    provider: "git-scm.com",
+    topic: "Tools",
+    level: "Beginner",
+    description: "The complete free guide to Git — branching, rebasing, remotes, and collaboration workflows.",
+    link: "https://git-scm.com/book/en/v2",
+  },
+  {
+    title: "The Missing Semester of Your CS Education",
+    provider: "MIT",
+    topic: "Tools",
+    level: "Intermediate",
+    description: "Master the shell, editors, version control, debugging, and other tools courses skip.",
+    link: "https://missing.csail.mit.edu/",
+  },
+];
+
+export const INTERVIEW_TOPICS = ["All", "Coding", "System Design", "Behavioral", "Resume"];
+
+export const INTERVIEW_GUIDES = [
+  {
+    title: "Tech Interview Handbook",
+    provider: "techinterviewhandbook.org",
+    topic: "Coding",
+    level: "All levels",
+    description: "A free end-to-end guide: study plans, algorithm cheatsheets, and what to expect in each round.",
+    link: "https://www.techinterviewhandbook.org/",
+  },
+  {
+    title: "NeetCode Roadmap",
+    provider: "NeetCode",
+    topic: "Coding",
+    level: "Intermediate",
+    description: "A curated roadmap of essential problems grouped by pattern, each with a video walkthrough.",
+    link: "https://neetcode.io/roadmap",
+  },
+  {
+    title: "Big-O Cheat Sheet",
+    provider: "bigocheatsheet.com",
+    topic: "Coding",
+    level: "Beginner",
+    description: "Quick reference for time and space complexity of common data structures and sorting algorithms.",
+    link: "https://www.bigocheatsheet.com/",
+  },
+  {
+    title: "The System Design Primer",
+    provider: "GitHub",
+    topic: "System Design",
+    level: "Intermediate",
+    description: "Learn how to design large-scale systems: caching, load balancing, databases, and trade-offs.",
+    link: "https://github.com/donnemartin/system-design-primer",
+  },
+  {
+    title: "Behavioral Interview Guide",
+    provider: "Tech Interview Handbook",
+    topic: "Behavioral",
+    level: "All levels",
+    description: "Common behavioral questions and how to answer them with clear, structured STAR stories.",
+    link: "https://www.techinterviewhandbook.org/behavioral-interview/",
+  },
+  {
+    title: "Anonymous Mock Interviews",
+    provider: "interviewing.io",
+    topic: "Behavioral",
+    level: "Intermediate",
+    description: "Practice live technical interviews and watch recordings of real interviews to calibrate.",
+    link: "https://interviewing.io/",
+  },
+  {
+    title: "Resume Writing Guide",
+    provider: "Tech Interview Handbook",
+    topic: "Resume",
+    level: "Beginner",
+    description: "How to write a software engineering resume that passes screens, with examples and templates.",
+    link: "https://www.techinterviewhandbook.org/resume/",
+  },
+];
+
+export const INTERVIEW_CHECKLIST = [
+  "Research the company, its products, and the role description.",
+  "Practice 2–3 problems per day across arrays, graphs, and dynamic programming.",
+  "Prepare 5 STAR stories covering teamwork, conflict, failure, and leadership.",
+  "Explain your thinking out loud and state trade-offs before you code.",
+  "Prepare 2–3 thoughtful questions to ask your interviewer.",
+];
