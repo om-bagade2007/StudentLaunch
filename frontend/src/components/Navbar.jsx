@@ -11,14 +11,23 @@ export default function Navbar() {
 
   return (
     <header className="border-b border-slate-200 bg-white">
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3">
+      <div className="mx-auto flex max-w-6xl flex-col gap-3 px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
         <NavLink to={user ? "/dashboard" : "/"} className="flex items-center gap-2">
           <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-blue-600 to-teal-500 text-sm font-bold text-white">
             SL
           </span>
           <span className="text-lg font-semibold text-slate-800">StudentLaunch</span>
         </NavLink>
-        <nav className="flex items-center gap-1">
+        <nav aria-label="Main navigation" className="flex flex-wrap items-center gap-1">
+          <NavLink to="/courses" className={linkClass}>
+            Courses
+          </NavLink>
+          <NavLink to="/tutorials" className={linkClass}>
+            Tutorials
+          </NavLink>
+          <NavLink to="/interview-guidance" className={linkClass}>
+            Interview Guidance
+          </NavLink>
           {user ? (
             <>
               <NavLink to="/dashboard" className={linkClass}>

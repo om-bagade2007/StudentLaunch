@@ -1,4 +1,4 @@
-const serverless = require("serverless-http");
-const app = require("../app"); // see step 3
-
-module.exports = serverless(app);
+// Vercel's Node.js runtime accepts Express applications as request handlers.
+// Wrapping the app with serverless-http uses a Lambda event/context adapter,
+// which is not the request/response contract Vercel invokes here.
+module.exports = require("../app");

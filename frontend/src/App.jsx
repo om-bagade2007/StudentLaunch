@@ -5,6 +5,9 @@ import HomePage from "./pages/HomePage";
 import AuthPage from "./pages/AuthPage";
 import ProfilePage from "./pages/ProfilePage";
 import DashboardPage from "./pages/DashboardPage";
+import CoursesPage from "./pages/CoursesPage";
+import TutorialsPage from "./pages/TutorialsPage";
+import InterviewGuidancePage from "./pages/InterviewGuidancePage";
 
 function HomeGate() {
   const { user, loading } = useAuth();
@@ -21,6 +24,9 @@ export default function App() {
           <Route path="/" element={<HomeGate />} />
           <Route path="/login" element={<AuthPage mode="login" />} />
           <Route path="/signup" element={<AuthPage mode="signup" />} />
+          <Route path="/courses" element={<CoursesPage />} />
+          <Route path="/tutorials" element={<TutorialsPage />} />
+          <Route path="/interview-guidance" element={<InterviewGuidancePage />} />
           <Route
             path="/profile"
             element={
