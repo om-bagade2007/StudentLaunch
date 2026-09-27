@@ -1,13 +1,9 @@
-.git
-.gitignore
 **/.env
 **/.env.*
 !**/.env.example
+.git
+.gitignore
 **/node_modules
 **/dist
 backend/public
-frontend/.env.local
-README.md
-*.md
 .cursor
-agent-transcripts
