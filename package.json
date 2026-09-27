@@ -1,0 +1,9 @@
+{
+  "name": "studentlaunch",
+  "private": true,
+  "scripts": {
+    "dev": "node scripts/dev.mjs",
+    "build": "npm run build --prefix frontend",
+    "start": "npm start --prefix backend"
+  }
+}
