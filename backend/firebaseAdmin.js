@@ -1,10 +1,8 @@
 require("dotenv").config();
 
-const { initializeApp, getApps, cert } = require("firebase-admin/app");
-const { getAuth } = require("firebase-admin/auth");
-const { getFirestore } = require("firebase-admin/firestore");
+const admin = require("firebase-admin");
 
-if (!getApps().length) {
+if (!admin.apps.length) {
   const raw = process.env.FIREBASE_SERVICE_ACCOUNT;
   if (!raw) {
     throw new Error(
@@ -19,16 +17,11 @@ if (!getApps().length) {
     throw new Error("FIREBASE_SERVICE_ACCOUNT must be valid JSON");
   }
 
-  initializeApp({
-    credential: cert(serviceAccount),
+  admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
   });
 }
 
-const admin = {
-  auth: () => getAuth(),
-  firestore: () => getFirestore(),
-};
-
-const db = getFirestore();
+const db = admin.firestore();
 
 module.exports = { admin, db };
