@@ -1,5 +1,5 @@
 const express = require("express");
-const { db } = require("../firebaseAdmin");
+const { getDb } = require("../firebaseAdmin");
 const requireAuth = require("../middleware/requireAuth");
 
 const router = express.Router();
@@ -12,7 +12,7 @@ router.post("/", requireAuth, async (req, res) => {
       return res.status(400).json({ error: "opportunityId is required" });
     }
 
-    const oppSnap = await db.collection("opportunities").doc(opportunityId).get();
+    const oppSnap = await getDb().collection("opportunities").doc(opportunityId).get();
     if (!oppSnap.exists) {
       return res.status(404).json({ error: "Opportunity not found" });
     }
@@ -23,7 +23,7 @@ router.post("/", requireAuth, async (req, res) => {
       opportunityId,
       createdAt: new Date().toISOString(),
     };
-    await db.collection("bookmarks").doc(docId).set(payload);
+    await getDb().collection("bookmarks").doc(docId).set(payload);
 
     return res.status(201).json({ id: docId, ...payload, opportunity: { id: oppSnap.id, ...oppSnap.data() } });
   } catch (err) {
@@ -37,7 +37,7 @@ router.delete("/:opportunityId", requireAuth, async (req, res) => {
     const uid = req.user.uid;
     const opportunityId = req.params.opportunityId;
     const docId = `${uid}_${opportunityId}`;
-    await db.collection("bookmarks").doc(docId).delete();
+    await getDb().collection("bookmarks").doc(docId).delete();
     return res.json({ ok: true });
   } catch (err) {
     console.error("DELETE /api/bookmarks/:opportunityId", err);
@@ -48,12 +48,12 @@ router.delete("/:opportunityId", requireAuth, async (req, res) => {
 router.get("/", requireAuth, async (req, res) => {
   try {
     const uid = req.user.uid;
-    const snap = await db.collection("bookmarks").where("uid", "==", uid).get();
+    const snap = await getDb().collection("bookmarks").where("uid", "==", uid).get();
 
     const items = await Promise.all(
       snap.docs.map(async (doc) => {
         const bookmark = { id: doc.id, ...doc.data() };
-        const oppSnap = await db.collection("opportunities").doc(bookmark.opportunityId).get();
+        const oppSnap = await getDb().collection("opportunities").doc(bookmark.opportunityId).get();
         return {
           ...bookmark,
           opportunity: oppSnap.exists ? { id: oppSnap.id, ...oppSnap.data() } : null,

@@ -1,5 +1,5 @@
 const express = require("express");
-const { db } = require("../firebaseAdmin");
+const { getDb } = require("../firebaseAdmin");
 
 const router = express.Router();
 
@@ -12,7 +12,7 @@ router.get("/", async (req, res) => {
     const category = req.query.category ? String(req.query.category).trim().toLowerCase() : "";
     const skill = req.query.skill ? String(req.query.skill).trim().toLowerCase() : "";
 
-    const snap = await db.collection("opportunities").get();
+    const snap = await getDb().collection("opportunities").get();
     let items = snap.docs.map(toOpportunity);
 
     if (category) {
@@ -33,7 +33,7 @@ router.get("/", async (req, res) => {
 
 router.get("/:id", async (req, res) => {
   try {
-    const snap = await db.collection("opportunities").doc(req.params.id).get();
+    const snap = await getDb().collection("opportunities").doc(req.params.id).get();
     if (!snap.exists) {
       return res.status(404).json({ error: "Opportunity not found" });
     }

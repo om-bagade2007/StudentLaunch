@@ -12,10 +12,18 @@ const admin = {
   firestore: () => getFirestore(getAdminApp()),
 };
 
+let appInstance;
+let firestoreInstance;
+
 function getAdminApp() {
+  if (appInstance) {
+    return appInstance;
+  }
+
   const existingApps = admin.apps;
   if (existingApps.length) {
-    return existingApps[0];
+    appInstance = existingApps[0];
+    return appInstance;
   }
 
   const raw = process.env.FIREBASE_SERVICE_ACCOUNT;
@@ -32,20 +40,17 @@ function getAdminApp() {
     throw new Error("FIREBASE_SERVICE_ACCOUNT must be valid JSON");
   }
 
-  return initializeApp({
+  appInstance = initializeApp({
     credential: cert(serviceAccount),
   });
+  return appInstance;
 }
 
-const db = new Proxy(
-  {},
-  {
-    get(_target, property) {
-      const firestore = admin.firestore();
-      const value = Reflect.get(firestore, property, firestore);
-      return typeof value === "function" ? value.bind(firestore) : value;
-    },
+function getDb() {
+  if (!firestoreInstance) {
+    firestoreInstance = admin.firestore();
   }
-);
+  return firestoreInstance;
+}
 
-module.exports = { admin, db };
+module.exports = { admin, getDb };

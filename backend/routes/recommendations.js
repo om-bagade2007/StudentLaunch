@@ -1,5 +1,5 @@
 const express = require("express");
-const { db } = require("../firebaseAdmin");
+const { getDb } = require("../firebaseAdmin");
 const requireAuth = require("../middleware/requireAuth");
 
 const router = express.Router();
@@ -12,13 +12,13 @@ function overlapCount(userValues, oppValues) {
 router.get("/", requireAuth, async (req, res) => {
   try {
     const uid = req.user.uid;
-    const profileSnap = await db.collection("profiles").doc(uid).get();
+    const profileSnap = await getDb().collection("profiles").doc(uid).get();
     if (!profileSnap.exists) {
       return res.status(404).json({ error: "Profile not found" });
     }
 
     const profile = profileSnap.data();
-    const oppSnap = await db.collection("opportunities").get();
+    const oppSnap = await getDb().collection("opportunities").get();
 
     const ranked = oppSnap.docs
       .map((doc) => {

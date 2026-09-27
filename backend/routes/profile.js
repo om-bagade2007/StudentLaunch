@@ -1,5 +1,5 @@
 const express = require("express");
-const { db } = require("../firebaseAdmin");
+const { getDb } = require("../firebaseAdmin");
 const requireAuth = require("../middleware/requireAuth");
 
 const router = express.Router();
@@ -20,8 +20,8 @@ router.post("/", requireAuth, async (req, res) => {
       updatedAt: new Date().toISOString(),
     };
 
-    await db.collection("profiles").doc(uid).set(payload, { merge: true });
-    const snap = await db.collection("profiles").doc(uid).get();
+    await getDb().collection("profiles").doc(uid).set(payload, { merge: true });
+    const snap = await getDb().collection("profiles").doc(uid).get();
     return res.json({ id: uid, ...snap.data() });
   } catch (err) {
     console.error("POST /api/profile", err);
@@ -32,7 +32,7 @@ router.post("/", requireAuth, async (req, res) => {
 router.get("/", requireAuth, async (req, res) => {
   try {
     const uid = req.user.uid;
-    const snap = await db.collection("profiles").doc(uid).get();
+    const snap = await getDb().collection("profiles").doc(uid).get();
     if (!snap.exists) {
       return res.status(404).json({ error: "Profile not found" });
     }
